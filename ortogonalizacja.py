@@ -4,36 +4,12 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 from copy import copy
-# u1 = v1
-# e1 = u1/||u1||
-# u2 = v2 - proju1(v2)
-# e2 = u2/||u2||
-#R = Q^T A
+from gaussJardan import GaussJordan
+from SIUtility import *
 
 
-def proj(u, v):
-    temp = u
-    cos = (np.dot(v,temp)/np.dot(temp,temp))
-    for i in range(len(temp)):
-        temp[i] = temp[i]* cos
-    return temp
 
-def sumProj(tabU, vector, liczbaProjekcji):
-    result =[]
-   
-    for j in range(len(vector)):
-        result.append(0)
-    
-    for i in range(liczbaProjekcji):
-        u = copy(tabU[i])
-        temp = proj(u, vector)
-        result = result+temp
-    return result
 
-def normalize(u):
-    dot = np.sqrt(np.sum(np.dot(u,u)))
-    result = u / dot
-    return result
 
 A = [
             [2,0],
@@ -69,4 +45,16 @@ R = matrixQT*matrixA
 
 #A1 = matrixQT * matrixA * matrixQ
 np.set_printoptions(suppress=True)
+
 print(R)
+
+
+#not working for squared
+temparrR= np.array(R)
+arrR = []
+for i in temparrR:
+    arrR.append(i.tolist())
+
+
+GRResult = GaussJordan(R)
+
