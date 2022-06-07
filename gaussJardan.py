@@ -2,11 +2,11 @@
 import numpy as np
 import sys
 
+#TODO - implement way to solve infinite solutions equasion by removing one of rows
 # Reading number of unknowns
 a = [
-    [2,0,1,6],
-    [0,1,0,2],
-    [1,2,0,2]
+    [1,2],
+    # [2,-1],
 ]
 def GaussJordan(a):
     n = len(a)
@@ -25,4 +25,4 @@ def GaussJordan(a):
         x[i] = a[i][n]/a[i][i]
 
     return x
-GaussJordan(a)
+print(GaussJordan(a))

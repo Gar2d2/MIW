@@ -11,50 +11,51 @@ from SIUtility import *
 
 
 
-A = [
-            [2,0],
-            [1,1],
-            [0,1]
-]
+# A = [
+#             [2,0],
+#             [1,1],
+#             [0,1]
+# ]
 
-tempVectors = np.matrix(A)
-tempVectors = np.transpose(tempVectors)
+def QRFactor(A):
+    tempVectors = np.matrix(A)
+    tempVectors = np.transpose(tempVectors)
 
-vectors = np.asarray(np.squeeze(tempVectors))
-vectors = vectors.astype('float64')
-
-
-arrayU = []
-
-for i in range(len(vectors)):
-    v = vectors[i]
-    suma = sumProj(arrayU, v, i)
-    arrayU.append(v-suma)
-
-arrayE = []
-
-for i in range(len(arrayU)):
-    arrayE.append(normalize(arrayU[i]))
+    vectors = np.asarray(np.squeeze(tempVectors))
+    vectors = vectors.astype('float64')
 
 
-matrixA = np.matrix(A)
-matrixQT = np.matrix(arrayE)
-matrixQ = np.transpose(matrixQT)
+    arrayU = []
 
-R = matrixQT*matrixA
+    for i in range(len(vectors)):
+        v = vectors[i]
+        suma = sumProj(arrayU, v, i)
+        arrayU.append(v-suma)
 
-#A1 = matrixQT * matrixA * matrixQ
+    arrayE = []
+
+    for i in range(len(arrayU)):
+        arrayE.append(normalize(arrayU[i]))
+
+
+    matrixA = np.matrix(A)
+    matrixQT = np.matrix(arrayE)
+    matrixQ = np.transpose(matrixQT)
+
+    R = matrixQT*matrixA
+    return [R, matrixQ]
+
 np.set_printoptions(suppress=True)
 
-print(R)
+# print(QRFactor(A))
 
 
-#not working for squared
-temparrR= np.array(R)
-arrR = []
-for i in temparrR:
-    arrR.append(i.tolist())
+# #not working for squared
+# temparrR= np.array(R)
+# arrR = []
+# for i in temparrR:
+#     arrR.append(i.tolist())
 
 
-GRResult = GaussJordan(R)
+# GRResult = GaussJordan(R)
 
