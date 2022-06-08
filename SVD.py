@@ -23,7 +23,7 @@ Q = arr[1]
 A = Q*R
 
 #nie wiem jak ale to faktycznie działa (jak bedę miał czas to się dowiem)
-for i in range(1000):
+for i in range(100):
     arr = QRFactor(A)
     R = arr[0]
     Q = arr[1]
@@ -74,7 +74,62 @@ matrixU = np.matrix(UVectorArray)
 matrixUT = matrixU.transpose()
 matrixSigma = np.matrix(sigma)
 
+#rozpoczynam liczenie V
+AtA = mA.transpose()*mA
+
+#nie wiedzieć czemu daje NAN, wiec korzystam z numpajowego (porownywalem wyniki QR z kalkulatorem i sam rozkład działał OK)
+Q, R= np.linalg.qr(AtA)
+AtAwlasne = Q*R
+for i in range(1000):
+    Q, R= np.linalg.qr(AtA)
+
+    if i%2 ==0:
+        AtAwlasne= Q*R
+    else:
+        AtAwlasne = R*Q
+        
+AtAwlasne = AtAwlasne.round(2)
+print(AtAwlasne)
+
+lambdaTable = []
+AtAwlasne = AtAwlasne.tolist()
+for i in range(len(AtA)):
+    lambdaTable.append(AtAwlasne[i][i])
+
+VVektorArray = []
+#dla każdej lambdy
+for i in range(len(lambdaTable)):
+    #for counting eigen vectors
+    temp = AtA.tolist()
+    for j in range(len(temp)):
+        #odejmuje lambdy z przekatnej
+        temp[j][j] -= lambdaTable[i]
+
+    #robie bardzo brzydko, bo zakladam ze rozwiazan jest inf a moja implementacja tego nie uwzglednia (spada z rowerka przy kwadratowej)
+    temp2 = [temp[x] for x in range(len(temp)-1)]
+
+    #tworze wektor z rozwiazaniami (bez x'a)
+    tempVector = [1.]
+    [tempVector.append(x) for x in GaussJordan(temp2)]
+    VVektorArray.append(tempVector)
+
+
+for i in range(len(VVektorArray)):
+    VVektorArray[i] = normalize(VVektorArray[i]).tolist()
+
+#ok mamy wszystkie wektory z V, ale nie wszystkie moze są potrzebne
+matrixVT = np.matrix(VVektorArray)
+for i in range(len(UVectorArray)):
+    if i > len(VVektorArray):
+        break
+    atMulVec = mA.transpose() * np.matrix(UVectorArray[i]).transpose()
+    mRow= (atMulVec.transpose() * 1/sigmaTable[i])
+    matrixVT[i] = mRow
+
+
 
 print(mA)
 print(matrixU)
 print(matrixSigma)
+print(matrixVT)
+
